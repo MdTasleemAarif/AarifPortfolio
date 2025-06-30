@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Quiz</title>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        margin: 0;
+        background: linear-gradient(to right, #00c6ff, #0072ff);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: #fff;
+      }
+      .quiz-container {
+        background: rgba(0, 0, 0, 0.7);
+        padding: 30px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 600px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      }
+      .quiz-container h2 {
+        margin-bottom: 20px;
+      }
+      .option {
+        background: #ffffff22;
+        padding: 12px 20px;
+        margin: 10px 0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .option:hover {
+        background: #ffffff55;
+      }
+      .option.correct {
+        background-color: #4caf50;
+      }
+      .option.wrong {
+        background-color: #f44336;
+      }
+      .buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      #nextBtn {
+        background: #ffeb3b;
+        color: #000;
+      }
+      #restartBtn {
+        background: #00e676;
+        color: #000;
+      }
+      .category-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .category-buttons button {
+        background: #fff;
+        color: #0072ff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="quiz-container" id="quizContainer">
+      <div id="categorySelect" class="category-buttons">
+        <h2>Choose Your Quiz</h2>
+        <button onclick="startQuiz('html')">Test Your HTML</button>
+        <button onclick="startQuiz('css')">Test Your CSS</button>
+        <button onclick="startQuiz('js')">Test Your JavaScript</button>
+      </div>
+      <div id="quizContent" style="display: none">
+        <h2 id="question">Loading question...</h2>
+        <div id="options"></div>
+        <div class="buttons">
+          <button id="restartBtn" onclick="restartQuiz()">Restart</button>
+          <button id="nextBtn">Next</button>
+        </div>
+        <div id="score"></div>
+      </div>
+    </div>
+
+    <script>
+      const quizData = {
+
+        html: [
+  { question: "What does HTML stand for?", options: ["Hyper Trainer Marking Language", "Hyper Text Markup Language", "Hyper Text Marketing Language", "Hyper Tool Multi Language"], answer: "Hyper Text Markup Language" },
+  { question: "Which tag is used to create a hyperlink in HTML?", options: ["<link>", "<a>", "<href>", "<hyper>"], answer: "<a>" },
+  { question: "Which HTML tag is used to display an image?", options: ["<img>", "<image>", "<pic>", "<src>"], answer: "<img>" },
+  { question: "Which HTML element is used to define important text?", options: ["<b>", "<i>", "<strong>", "<mark>"], answer: "<strong>" },
+  { question: "How do you insert a line break in HTML?", options: ["<break>", "<lb>", "<br>", "<line>"], answer: "<br>" },
+  { question: "What is the correct HTML element for the largest heading?", options: ["<heading>", "<h6>", "<head>", "<h1>"], answer: "<h1>" },
+  { question: "Which tag is used to define a table row?", options: ["<row>", "<td>", "<th>", "<tr>"], answer: "<tr>" },
+  { question: "Which tag is used to define a table cell?", options: ["<cell>", "<td>", "<th>", "<tr>"], answer: "<td>" },
+  { question: "Which HTML element defines the title of a document?", options: ["<meta>", "<title>", "<head>", "<h1>"], answer: "<title>" },
+  { question: "How can you make a numbered list?", options: ["<ul>", "<list>", "<ol>", "<dl>"], answer: "<ol>" },
+  { question: "Which tag creates a checkbox in HTML?", options: ["<input type='check'>", "<checkbox>", "<input type='checkbox'>", "<check>"], answer: "<input type='checkbox'>" },
+  { question: "Which HTML attribute specifies an alternate text for an image?", options: ["alt", "title", "src", "longdesc"], answer: "alt" },
+  { question: "How do you create an e-mail link?", options: ["<a href='mail'>", "<a href='mailto:'>", "<mail>link</mail>", "<a email=''>"], answer: "<a href='mailto:'>" },
+  { question: "What is the correct HTML for inserting a horizontal rule?", options: ["<hr>", "<line>", "<break>", "<tr>"], answer: "<hr>" },
+  { question: "What is the correct HTML for adding a background color?", options: ["<body bg='yellow'>", "<background>yellow</background>", "<body style='background-color:yellow;'>", "<bg>yellow</bg>"], answer: "<body style='background-color:yellow;'>" },
+  { question: "Which tag is used to define a form in HTML?", options: ["<form>", "<input>", "<fieldset>", "<textarea>"], answer: "<form>" },
+  { question: "Which HTML attribute is used to define inline styles?", options: ["styles", "font", "style", "class"], answer: "style" },
+  { question: "Which input type defines a slider control?", options: ["input type='slider'", "input type='range'", "input type='scroll'", "input type='drag'"], answer: "input type='range'" },
+  { question: "Which element is used to embed a video in HTML?", options: ["<media>", "<video>", "<movie>", "<embed>"], answer: "<video>" },
+  { question: "Which doctype declaration is correct for HTML5?", options: ["<!DOCTYPE HTML PUBLIC>", "<!HTML5>", "<!DOCTYPE html>", "<doctype html5>"], answer: "<!DOCTYPE html>" }
+],
+
+css: [
+  { question: "What does CSS stand for?", options: ["Cascading Style Sheets", "Colorful Style Sheets", "Computer Style Sheets", "Creative Style Sheets"], answer: "Cascading Style Sheets" },
+  { question: "Which CSS property controls the text size?", options: ["font-size", "text-style", "text-size", "font-style"], answer: "font-size" },
+  { question: "Which symbol is used for ID selector in CSS?", options: [".", "#", "$", "@"], answer: "#" },
+  { question: "How do you make text bold in CSS?", options: ["font-weight: bold;", "text-style: bold;", "font-style: bold;", "bold: true;"], answer: "font-weight: bold;" },
+  { question: "Which property sets the background color?", options: ["color", "background-color", "bgcolor", "bg"], answer: "background-color" },
+  { question: "Which property is used to change the font of an element?", options: ["font-family", "font-style", "font-weight", "text-font"], answer: "font-family" },
+  { question: "How do you center text in CSS?", options: ["text-align: center;", "align: center;", "center-text: true;", "text: center;"], answer: "text-align: center;" },
+  { question: "Which CSS property controls spacing between lines of text?", options: ["line-spacing", "line-height", "spacing", "text-spacing"], answer: "line-height" },
+  { question: "Which CSS property adds space inside an element?", options: ["margin", "border", "padding", "spacing"], answer: "padding" },
+  { question: "What does the 'z-index' property control?", options: ["Zoom level", "Stacking order", "Element ID", "Element rotation"], answer: "Stacking order" },
+  { question: "Which property makes an element float to the left or right?", options: ["float", "align", "position", "side"], answer: "float" },
+  { question: "Which property is used to hide an element in CSS?", options: ["display: none;", "visibility: hidden;", "opacity: 0;", "All of the above"], answer: "All of the above" },
+  { question: "Which property is used to apply shadow to text?", options: ["box-shadow", "text-shadow", "font-shadow", "shadow"], answer: "text-shadow" },
+  { question: "Which value of 'position' keeps the element relative to the browser window?", options: ["absolute", "fixed", "relative", "static"], answer: "fixed" },
+  { question: "Which property sets the space between letters?", options: ["letter-spacing", "word-spacing", "font-spacing", "text-spacing"], answer: "letter-spacing" },
+  { question: "What is the default position value for HTML elements?", options: ["relative", "absolute", "static", "fixed"], answer: "static" },
+  { question: "Which property changes the size of the outer border?", options: ["border-size", "border-width", "border-spacing", "border-thickness"], answer: "border-width" },
+  { question: "Which unit is NOT relative in CSS?", options: ["em", "%", "px", "rem"], answer: "px" },
+  { question: "Which CSS property sets the type of cursor to be displayed?", options: ["cursor", "mouse-pointer", "pointer-type", "hover-style"], answer: "cursor" },
+  { question: "Which shorthand property sets all margin values at once?", options: ["margin-all", "margin", "padding", "spacing"], answer: "margin" }
+],
+
+js: [
+  { question: "Which language is used for web development along with HTML and CSS?", options: ["Python", "C++", "JavaScript", "Java"], answer: "JavaScript" },
+  { question: "Which keyword is used to declare a variable in JavaScript?", options: ["var", "int", "let", "Both var and let"], answer: "Both var and let" },
+  { question: "What does DOM stand for?", options: ["Document Object Model", "Data Object Management", "Digital Object Map", "Desktop Object Model"], answer: "Document Object Model" },
+  { question: "Which function converts a string to an integer?", options: ["parseFloat()", "parseInt()", "toInteger()", "Number()"], answer: "parseInt()" },
+  { question: "Which operator is used to assign a value?", options: ["=", "==", "===", ":="], answer: "=" },
+  { question: "Which method is used to write on the browser console?", options: ["console.log()", "log.console()", "print()", "write.console()"], answer: "console.log()" },
+  { question: "Which symbol is used for comments in JavaScript?", options: ["//", "<!-- -->", "##", "**"], answer: "//" },
+  { question: "How do you define a function in JavaScript?", options: ["function = myFunc()", "function:myFunc()", "function myFunc()", "define myFunc()"], answer: "function myFunc()" },
+  { question: "Which array method adds an element at the end?", options: ["push()", "pop()", "shift()", "unshift()"], answer: "push()" },
+  { question: "Which method removes the last element from an array?", options: ["pop()", "shift()", "remove()", "splice()"], answer: "pop()" },
+  { question: "How do you find the length of an array?", options: [".count", ".length", ".size", ".index"], answer: ".length" },
+  { question: "Which keyword is used for a conditional statement?", options: ["if", "for", "while", "loop"], answer: "if" },
+  { question: "Which loop is guaranteed to run at least once?", options: ["for", "while", "do...while", "foreach"], answer: "do...while" },
+  { question: "Which object represents the browser window?", options: ["document", "window", "screen", "location"], answer: "window" },
+  { question: "How do you declare a constant in JavaScript?", options: ["const", "let", "var", "constant"], answer: "const" },
+  { question: "Which of the following is not a JavaScript data type?", options: ["string", "boolean", "float", "undefined"], answer: "float" },
+  { question: "Which operator checks both value and type?", options: ["==", "=", "===", "!="], answer: "===" },
+  { question: "Which function is used to delay execution?", options: ["setTimeout()", "setInterval()", "delay()", "wait()"], answer: "setTimeout()" },
+  { question: "Which method joins array elements into a string?", options: ["concat()", "combine()", "join()", "merge()"], answer: "join()" },
+  { question: "Which keyword is used to handle exceptions?", options: ["catch", "error", "exception", "try"], answer: "catch" }
+]
+  }
+
+      let currentCategory = "";
+      let currentIndex = 0;
+      let score = 0;
+
+      const questionEl = document.getElementById("question");
+      const optionsEl = document.getElementById("options");
+      const nextBtn = document.getElementById("nextBtn");
+      const scoreEl = document.getElementById("score");
+      const quizContent = document.getElementById("quizContent");
+      const categorySelect = document.getElementById("categorySelect");
+
+      function startQuiz(category) {
+        currentCategory = category;
+        currentIndex = 0;
+        score = 0;
+        categorySelect.style.display = "none";
+        quizContent.style.display = "block";
+        loadQuestion();
+      }
+
+      function loadQuestion() {
+        const current = quizData[currentCategory][currentIndex];
+        questionEl.textContent = current.question;
+        optionsEl.innerHTML = "";
+        scoreEl.innerHTML = "";
+
+        current.options.forEach((option) => {
+          const btn = document.createElement("div");
+          btn.textContent = option;
+          btn.classList.add("option");
+          btn.onclick = () => selectOption(btn, option);
+          optionsEl.appendChild(btn);
+        });
+      }
+
+      function selectOption(btn, option) {
+        const current = quizData[currentCategory][currentIndex];
+        const allOptions = document.querySelectorAll(".option");
+        allOptions.forEach((opt) => (opt.onclick = null));
+
+        if (option === current.answer) {
+          btn.classList.add("correct");
+          score++;
+        } else {
+          btn.classList.add("wrong");
+          allOptions.forEach((opt) => {
+            if (opt.textContent === current.answer)
+              opt.classList.add("correct");
+          });
+        }
+      }
+
+      nextBtn.onclick = () => {
+        currentIndex++;
+        if (currentIndex < quizData[currentCategory].length) {
+          loadQuestion();
+        } else {
+          quizContent.innerHTML = `<h2>Quiz Completed!</h2><p>Your score: ${score} / ${quizData[currentCategory].length}</p><button onclick='restartQuiz()'>Restart Quiz</button>`;
+        }
+      };
+
+      function restartQuiz() {
+        categorySelect.style.display = "block";
+        quizContent.style.display = "none";
+        quizContent.innerHTML = `
+        <h2 id="question">Loading question...</h2>
+        <div id="options"></div>
+        <div class="buttons">
+          <button id="restartBtn" onclick="restartQuiz()">Restart</button>
+          <button id="nextBtn">Next</button>
+        </div>
+        <div id="score"></div>
+      `;
+        document.getElementById("nextBtn").onclick = nextBtn.onclick;
+      }
+    </script>
+  </body>
+</html>

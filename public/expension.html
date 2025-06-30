@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 60px auto;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      padding: 40px;
+      animation: fadeSlideIn 0.6s ease-out;
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .balance {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 28px;
+      color: #00c853;
+      font-weight: bold;
+    }
+    .form-control {
+      margin-bottom: 15px;
+    }
+    .form-control label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .form-control input, .form-control select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      transition: border 0.3s ease;
+    }
+    .form-control input:focus, .form-control select:focus {
+      border-color: #0072ff;
+      outline: none;
+    }
+    .form-control button {
+      width: 100%;
+      background: #0072ff;
+      color: #fff;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .form-control button:hover {
+      background: #0057cc;
+    }
+    .transactions {
+      margin-top: 30px;
+    }
+    .transactions h3 {
+      margin-bottom: 10px;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 5px;
+      color: #444;
+    }
+    .filter-control {
+      margin-bottom: 20px;
+    }
+    .filter-control select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .transactions ul {
+      list-style: none;
+      padding: 0;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+    .transactions li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      position: relative;
+      animation: fadeSlideIn 0.4s ease-out;
+    }
+    .income {
+      background: #e8f5e9;
+      border-left: 5px solid #2ecc71;
+    }
+    .expense {
+      background: #fdecea;
+      border-left: 5px solid #e74c3c;
+    }
+    .transactions .delete-btn {
+      background: transparent;
+      border: none;
+      color: #888;
+      font-size: 16px;
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .transactions .delete-btn:hover {
+      color: #ff3b30;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>💸 Expense Tracker</h2>
+    <div class="balance">Balance: ₹<span id="balance">0</span></div>
+
+    <div class="form-control">
+      <label for="type">Transaction Type</label>
+      <select id="type">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+    </div>
+    <div class="form-control">
+      <label for="description">Description</label>
+      <input type="text" id="description" placeholder="e.g., Salary, Groceries">
+    </div>
+    <div class="form-control">
+      <label for="amount">Amount (₹)</label>
+      <input type="number" id="amount" placeholder="Enter amount">
+    </div>
+    <div class="form-control">
+      <button onclick="addTransaction()">➕ Add Transaction</button>
+    </div>
+
+    <div class="transactions">
+      <h3>📜 Transaction History</h3>
+      <div class="filter-control">
+        <select id="filter" onchange="renderTransactions()">
+          <option value="all">Show All</option>
+          <option value="income">Only Income</option>
+          <option value="expense">Only Expense</option>
+        </select>
+      </div>
+      <ul id="transactionList"></ul>
+    </div>
+  </div>
+
+  <script>
+    let balance = 0;
+    const balanceDisplay = document.getElementById("balance");
+    const transactionList = document.getElementById("transactionList");
+    const filterSelect = document.getElementById("filter");
+    let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
+    function updateBalance() {
+      balance = transactions.reduce((acc, item) => {
+        return acc + (item.type === 'income' ? item.amount : -item.amount);
+      }, 0);
+      balanceDisplay.textContent = balance.toFixed(2);
+    }
+
+    function saveTransactions() {
+      localStorage.setItem("transactions", JSON.stringify(transactions));
+    }
+
+    function renderTransactions() {
+      const filter = filterSelect.value;
+      transactionList.innerHTML = '';
+      transactions.forEach((item, index) => {
+        if (filter === 'all' || item.type === filter) {
+          const li = document.createElement("li");
+          li.classList.add(item.type);
+          li.innerHTML = `
+            <span>${item.description}</span>
+            <span>${item.type === 'expense' ? '-' : '+'}₹${item.amount.toFixed(2)} 	&nbsp;	&nbsp;	&nbsp;</span>
+            <button class="delete-btn" onclick="deleteTransaction(${index})">✖</button>
+          `;
+          transactionList.appendChild(li);
+        }
+      });
+      updateBalance();
+    }
+
+    function addTransaction() {
+      const type = document.getElementById("type").value;
+      const desc = document.getElementById("description").value.trim();
+      const amount = parseFloat(document.getElementById("amount").value);
+
+      if (desc === '' || isNaN(amount) || amount <= 0) {
+        alert("Please enter a valid description and amount");
+        return;
+      }
+
+      transactions.push({ type, description: desc, amount });
+      saveTransactions();
+      renderTransactions();
+
+      document.getElementById("description").value = '';
+      document.getElementById("amount").value = '';
+    }
+
+    function deleteTransaction(index) {
+      transactions.splice(index, 1);
+      saveTransactions();
+      renderTransactions();
+    }
+
+    // Initial render on load
+    renderTransactions();
+  </script>
+</body>
+</html>

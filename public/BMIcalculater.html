@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMI Calculator</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #43cea2, #185a9d);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+    .container {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+    button {
+      padding: 12px 20px;
+      background-color: #00e676;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #00c853;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+    .status {
+      font-weight: bold;
+    }
+    .bar-container {
+      margin-top: 20px;
+      background: #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 20px;
+    }
+    .bar {
+      height: 100%;
+      transition: width 0.4s ease;
+    }
+    .underweight { background: #03a9f4; }
+    .normal { background: #4caf50; }
+    .overweight { background: #ffc107; }
+    .obese { background: #f44336; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>BMI Calculator</h1>
+    <input type="number" id="height" placeholder="Height in cm">
+    <input type="number" id="weight" placeholder="Weight in kg">
+    <button onclick="calculateBMI()">Calculate BMI</button>
+    <div class="result" id="result"></div>
+    <div class="bar-container">
+      <div class="bar" id="bmiBar" style="width: 0%"></div>
+    </div>
+  </div>
+
+  <script>
+    function calculateBMI() {
+      const heightCm = parseFloat(document.getElementById("height").value);
+      const weight = parseFloat(document.getElementById("weight").value);
+      const result = document.getElementById("result");
+      const bmiBar = document.getElementById("bmiBar");
+
+      if (isNaN(heightCm) || isNaN(weight) || heightCm <= 0 || weight <= 0) {
+        result.innerHTML = "<span style='color: #ffeb3b;'>Please enter valid height and weight.</span>";
+        bmiBar.style.width = '0%';
+        bmiBar.className = 'bar';
+        return;
+      }
+
+      const bmi = (weight / ((heightCm / 100) ** 2)).toFixed(2);
+      let status = "";
+      let barClass = "";
+      let barWidth = 0;
+
+      if (bmi < 18.5) {
+        status = "Underweight";
+        barClass = "underweight";
+        barWidth = 25;
+      } else if (bmi < 24.9) {
+        status = "Normal weight";
+        barClass = "normal";
+        barWidth = 50;
+      } else if (bmi < 29.9) {
+        status = "Overweight";
+        barClass = "overweight";
+        barWidth = 75;
+      } else {
+        status = "Obese";
+        barClass = "obese";
+        barWidth = 100;
+      }
+
+      result.innerHTML = `Your BMI is <strong>${bmi}</strong>.<br><span class="status">Health Status: ${status}</span>`;
+      bmiBar.className = `bar ${barClass}`;
+      bmiBar.style.width = `${barWidth}%`;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Standard Calculator</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    .calculator {
+      background: #2c2c2c;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      width: 340px;
+    }
+    .calculator input {
+      width: 100%;
+      height: 60px;
+      background: #1d1d1d;
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: right;
+      font-size: 28px;
+      color: #fff;
+      padding: 10px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+    button {
+      padding: 20px;
+      font-size: 20px;
+      border: none;
+      border-radius: 10px;
+      background: #4e4e50;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #6c6c6f;
+    }
+    .operator {
+      background: #ff9500;
+    }
+    .operator:hover {
+      background: #e68a00;
+    }
+    .equal {
+      background: #34c759;
+    }
+    .equal:hover {
+      background: #28a745;
+    }
+    .clear {
+      background: #ff3b30;
+    }
+    .clear:hover {
+      background: #e53935;
+    }
+  </style>
+</head>
+<body>
+
+<div class="calculator">
+  <input type="text" id="display" readonly>
+  <div class="buttons">
+    <button onclick="appendNumber('7')">7</button>
+    <button onclick="appendNumber('8')">8</button>
+    <button onclick="appendNumber('9')">9</button>
+    <button class="operator" onclick="appendOperator('/')">÷</button>
+
+    <button onclick="appendNumber('4')">4</button>
+    <button onclick="appendNumber('5')">5</button>
+    <button onclick="appendNumber('6')">6</button>
+    <button class="operator" onclick="appendOperator('*')">×</button>
+
+    <button onclick="appendNumber('1')">1</button>
+    <button onclick="appendNumber('2')">2</button>
+    <button onclick="appendNumber('3')">3</button>
+    <button class="operator" onclick="appendOperator('-')">−</button>
+
+    <button onclick="appendNumber('0')">0</button>
+    <button onclick="appendNumber('.')">.</button>
+    <button onclick="applyPercentage()">%</button>
+    <button class="operator" onclick="appendOperator('+')">+</button>
+
+    <button onclick="backspace()">←</button>
+    <button class="clear" onclick="clearDisplay()">C</button>
+    <button class="equal" onclick="calculate()" style="grid-column: span 2;">=</button>
+  </div>
+</div>
+
+<script>
+  let currentInput = '';
+
+  function appendNumber(number) {
+    currentInput = currentInput.toString() + number;
+    updateDisplay();
+  }
+
+  function appendOperator(op) {
+    if (currentInput === '' || currentInput === 'Error') return;
+    currentInput = currentInput.toString();
+    const lastChar = currentInput.slice(-1);
+    if (["+", "-", "*", "/"].includes(lastChar)) {
+      currentInput = currentInput.slice(0, -1);
+    }
+    currentInput += op;
+    updateDisplay();
+  }
+
+  function applyPercentage() {
+    try {
+      if (currentInput === '' || currentInput === 'Error') return;
+      const match = currentInput.match(/(.*?)([+\-*/])(\d+(\.\d+)?)$/);
+      if (match) {
+        const base = parseFloat(eval(match[1]));
+        const operator = match[2];
+        const percent = parseFloat(match[3]);
+        const percentValue = (base * percent) / 100;
+        currentInput = match[1] + operator + percentValue;
+      } else {
+        // fallback: convert whole value to percent
+        const base = parseFloat(currentInput);
+        if (!isNaN(base)) {
+          currentInput = (base / 100).toString();
+        }
+      }
+      updateDisplay();
+    } catch (e) {
+      currentInput = 'Error';
+      updateDisplay();
+    }
+  }
+
+  function calculate() {
+    try {
+      if (currentInput === '' || currentInput === 'Error') return;
+      let result = eval(currentInput);
+      currentInput = isNaN(result) ? 'Error' : result.toString();
+      updateDisplay();
+    } catch (error) {
+      currentInput = 'Error';
+      updateDisplay();
+    }
+  }
+
+  function updateDisplay() {
+    document.getElementById('display').value = currentInput;
+  }
+
+  function clearDisplay() {
+    currentInput = '';
+    updateDisplay();
+  }
+
+  function backspace() {
+    if (currentInput && currentInput !== 'Error') {
+      currentInput = currentInput.toString().slice(0, -1);
+    } else {
+      currentInput = '';
+    }
+    updateDisplay();
+  }
+
+  document.addEventListener('keydown', function (event) {
+    const key = event.key;
+    if (!isNaN(key) || key === '.') {
+      appendNumber(key);
+    } else if (["+", "-", "*", "/"].includes(key)) {
+      appendOperator(key);
+    } else if (key === '%') {
+      applyPercentage();
+    } else if (key === 'Enter') {
+      event.preventDefault();
+      calculate();
+    } else if (key === 'Backspace') {
+      event.preventDefault();
+      backspace();
+    } else if (key === 'Escape') {
+      clearDisplay();
+    }
+  });
+</script>
+
+</body>
+</html>

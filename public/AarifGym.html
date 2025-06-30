@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitLife Health & Fitness</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f8;
+        color: #333;
+      }
+      header {
+        background: linear-gradient(135deg, #00c6ff, #0072ff);
+        color: white;
+        text-align: center;
+        padding: 50px 20px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 48px;
+      }
+      header p {
+        font-size: 20px;
+        margin-top: 10px;
+      }
+      .cta-button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 28px;
+        background-color: #ffeb3b;
+        color: #000;
+        font-weight: bold;
+        border-radius: 25px;
+        text-decoration: none;
+        transition: background 0.3s ease;
+      }
+      .cta-button:hover {
+        background-color: #fff176;
+      }
+      .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 40px 20px;
+      }
+      .section-title {
+        font-size: 32px;
+        color: #0072ff;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #00c6ff;
+        display: inline-block;
+      }
+      .trainers {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+      }
+      .trainer-card {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .trainer-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+      .trainer-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+      .trainer-card h3 {
+        margin-top: 15px;
+        color: #0072ff;
+      }
+      .trainer-card p {
+        font-size: 14px;
+        color: #666;
+      }
+      .schedule,
+      .pricing,
+      .workout-timetable {
+        margin-top: 50px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      th,
+      td {
+        padding: 15px;
+        text-align: center;
+      }
+      th {
+        background-color: #0072ff;
+        color: white;
+      }
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      tr:hover {
+        background-color: #e0f7fa;
+      }
+      .today {
+        background-color: #c8e6c9 !important;
+        font-weight: bold;
+      }
+      .featured {
+        background: linear-gradient(90deg, #ffeb3b, #ffd600) !important;
+        color: #000;
+        font-weight: bold;
+      }
+      footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #333;
+        color: #aaa;
+        font-size: 14px;
+        margin-top: 60px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>FitLife Health & Fitness</h1>
+      <p>Your Journey to a Healthier Life Begins Here</p>
+      <a href="#pricing" class="cta-button">Join Now</a>
+    </header>
+
+    <div class="container">
+      <section>
+        <h2 class="section-title">Meet Our Trainers</h2>
+        <div class="trainers">
+          <div class="trainer-card">
+            <img src="https://i.ytimg.com/vi/I09eFZZLxfs/maxresdefault.jpg" alt="Trainer 1" />
+            <h3>John Smith</h3>
+            <p>Certified Personal Trainer | Strength & Conditioning Expert</p>
+          </div>
+          <div class="trainer-card">
+            <img src="https://i.ytimg.com/vi/vZo7_WRFSWU/maxresdefault.jpg" alt="Trainer 2" />
+            <h3>Lisa Brown</h3>
+            <p>Yoga Instructor | Flexibility and Wellness Coach</p>
+          </div>
+          <div class="trainer-card">
+            <img src="https://media.apnarm.net.au/media/images/2014/01/23/9-2185948-twe200114genisis1_ct1880x930.jpg" alt="Trainer 3" />
+            <h3>Mike Johnson</h3>
+            <p>HIIT Specialist | Weight Loss Consultant</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="schedule">
+        <h2 class="section-title">Weekly Schedule</h2>
+        <table>
+          <tr>
+            <th>Day</th>
+            <th>Class</th>
+            <th>Trainer</th>
+            <th>Time</th>
+          </tr>
+          <tr class="today">
+            <td>Monday</td>
+            <td>Strength Training</td>
+            <td>John Smith</td>
+            <td>6:00 PM - 7:00 PM</td>
+          </tr>
+          <tr>
+            <td>Wednesday</td>
+            <td>Yoga & Meditation</td>
+            <td>Lisa Brown</td>
+            <td>7:00 AM - 8:00 AM</td>
+          </tr>
+          <tr>
+            <td>Friday</td>
+            <td>HIIT Session</td>
+            <td>Mike Johnson</td>
+            <td>5:00 PM - 6:00 PM</td>
+          </tr>
+        </table>
+      </section>
+
+      <section class="workout-timetable">
+        <h2 class="section-title">Gym Workout Timetable</h2>
+        <table>
+          <tr>
+            <th>Day</th>
+            <th>Morning Session</th>
+            <th>Evening Session</th>
+          </tr>
+          <tr>
+            <td>Monday</td>
+            <td>Cardio + Abs</td>
+            <td>Strength Training</td>
+          </tr>
+          <tr>
+            <td>Tuesday</td>
+            <td>Upper Body Workout</td>
+            <td>Core Training</td>
+          </tr>
+          <tr>
+            <td>Wednesday</td>
+            <td>Yoga Stretching</td>
+            <td>Legs and Lower Body</td>
+          </tr>
+          <tr>
+            <td>Thursday</td>
+            <td>HIIT Blast</td>
+            <td>CrossFit WOD</td>
+          </tr>
+          <tr>
+            <td>Friday</td>
+            <td>Full Body Functional</td>
+            <td>Strength & Powerlifting</td>
+          </tr>
+          <tr>
+            <td>Saturday</td>
+            <td>Boxing Training</td>
+            <td>Stretch & Recovery</td>
+          </tr>
+          <tr>
+            <td>Sunday</td>
+            <td colspan="2">Rest / Open Gym Access</td>
+          </tr>
+        </table>
+      </section>
+
+      <section class="pricing" id="pricing">
+        <h2 class="section-title">Pricing Plans</h2>
+        <table>
+          <tr>
+            <th>Plan</th>
+            <th>Details</th>
+            <th>Price</th>
+          </tr>
+          <tr>
+            <td>Monthly Membership</td>
+            <td>Access to all group classes</td>
+            <td>₹2000</td>
+          </tr>
+          <tr class="featured">
+            <td>Quarterly Membership</td>
+            <td>Personal trainer + group classes</td>
+            <td>₹5500</td>
+          </tr>
+          <tr>
+            <td>Annual Membership</td>
+            <td>Full access + 2 free personal sessions</td>
+            <td>₹20000</td>
+          </tr>
+        </table>
+      </section>
+    </div>
+
+    <footer>
+      &copy; 2025 FitLife Health & Fitness | Designed by DeepSeekMindset.com
+    </footer>
+  </body>
+</html>

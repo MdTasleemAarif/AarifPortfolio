@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Alarm Clock</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .clock {
+      font-size: 60px;
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+    }
+    .alarm-set, .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    select, button {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #00c853;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #00b342;
+    }
+    #stopBtn, #snoozeBtn {
+      background-color: #ff1744;
+    }
+    #stopBtn:hover, #snoozeBtn:hover {
+      background-color: #d50000;
+    }
+    .status {
+      font-size: 18px;
+      margin-top: 10px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      background-color: rgba(255, 193, 7, 0.1);
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .status.alarming {
+      background-color: #ffc107;
+      color: #000;
+      font-weight: bold;
+      border-color: #fff;
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="clock" id="clock">00:00:00</div>
+
+  <div class="alarm-set">
+    <select id="hours"></select>
+    <select id="minutes"></select>
+    <select id="ampm">
+      <option value="AM">AM</option>
+      <option value="PM">PM</option>
+    </select>
+    <button onclick="setAlarm()">Set Alarm</button>
+  </div>
+
+  <div class="controls">
+    <button id="stopBtn" onclick="clearAlarm()">Stop Alarm</button>
+    <button id="snoozeBtn" onclick="snoozeAlarm()">Snooze 5 min</button>
+  </div>
+
+  <div class="status" id="status">No alarm set</div>
+
+  <audio id="alarmSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto" loop></audio>
+
+  <script>
+    const clockElement = document.getElementById("clock");
+    const statusElement = document.getElementById("status");
+    const alarmSound = document.getElementById("alarmSound");
+    let alarmTime = null;
+    let alarmActive = false;
+
+    function updateClock() {
+      const now = new Date();
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      let seconds = now.getSeconds();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      const hh = hours < 10 ? '0' + hours : hours;
+      const mm = minutes < 10 ? '0' + minutes : minutes;
+      const ss = seconds < 10 ? '0' + seconds : seconds;
+
+      const timeString = `${hh}:${mm}:${ss} ${ampm}`;
+      clockElement.textContent = timeString;
+
+      if (alarmTime && timeString === alarmTime && !alarmActive) {
+        alarmActive = true;
+        alarmSound.play();
+        statusElement.textContent = "⏰ Alarm ringing! Click Stop or Snooze.";
+        statusElement.classList.add("alarming");
+      }
+    }
+
+    function populateSelect(id, max) {
+      const select = document.getElementById(id);
+      for (let i = 1; i <= max; i++) {
+        const val = i < 10 ? '0' + i : i;
+        const option = document.createElement("option");
+        option.value = val;
+        option.text = val;
+        select.appendChild(option);
+      }
+    }
+
+    function setAlarm() {
+      const hour = document.getElementById("hours").value;
+      const minute = document.getElementById("minutes").value;
+      const ampm = document.getElementById("ampm").value;
+      alarmTime = `${hour}:${minute}:00 ${ampm}`;
+      alarmActive = false;
+      statusElement.textContent = `Alarm set for ${alarmTime}`;
+      statusElement.classList.remove("alarming");
+    }
+
+    function clearAlarm() {
+      alarmTime = null;
+      alarmSound.pause();
+      alarmSound.currentTime = 0;
+      alarmActive = false;
+      statusElement.textContent = "Alarm cleared.";
+      statusElement.classList.remove("alarming");
+    }
+
+    function snoozeAlarm() {
+      alarmSound.pause();
+      alarmSound.currentTime = 0;
+      alarmActive = false;
+      const now = new Date();
+      now.setMinutes(now.getMinutes() + 5);
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      const hh = hours < 10 ? '0' + hours : hours;
+      const mm = minutes < 10 ? '0' + minutes : minutes;
+      alarmTime = `${hh}:${mm}:00 ${ampm}`;
+      statusElement.textContent = `Snoozed! Alarm will ring at ${alarmTime}`;
+      statusElement.classList.remove("alarming");
+    }
+
+    populateSelect("hours", 12);
+    populateSelect("minutes", 59);
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>

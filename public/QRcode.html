@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QR Code for My Projects</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    canvas {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Scan this QR to View My Projects</h1>
+  <canvas id="qrCanvas"></canvas>
+
+  <script>
+    const url = "https://mdtasleemaarif.github.io/gamezone/";
+    QRCode.toCanvas(document.getElementById("qrCanvas"), url, {
+      color: {
+        dark: "#ffffff",
+        light: "#000000"
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    h1 {
+      margin-bottom: 10px;
+      font-size: 36px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+    }
+    .choices {
+      display: flex;
+      gap: 40px;
+      margin: 20px 0;
+    }
+    .choice {
+      padding: 0;
+      width: 120px;
+      height: 120px;
+      font-size: 36px;
+      border: none;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffffffcc, #ffffff22);
+      color: #333;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 1.8s infinite;
+    }
+    .choice:hover {
+      background: #ffffff;
+      transform: scale(1.15);
+      color: #764ba2;
+    }
+    .choice-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .choice-text {
+      font-size: 16px;
+      margin-top: 5px;
+      font-weight: bold;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .result {
+      font-size: 24px;
+      margin-top: 20px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px 25px;
+      border-radius: 10px;
+      max-width: 400px;
+    }
+    .scoreboard {
+      font-size: 20px;
+      margin-top: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 10px 20px;
+      border-radius: 8px;
+    }
+    .history {
+      margin-top: 30px;
+      max-width: 400px;
+      width: 90%;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 8px;
+      overflow-y: auto;
+      max-height: 150px;
+    }
+    .history h3 {
+      margin-top: 0;
+      margin-bottom: 5px;
+      font-size: 18px;
+    }
+    .history ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+    .history li {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .reset-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #ff4081;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .reset-btn:hover {
+      background-color: #f50057;
+    }
+    .winner-banner {
+      margin-top: 20px;
+      padding: 20px;
+      background: gold;
+      color: #000;
+      font-size: 24px;
+      font-weight: bold;
+      border-radius: 10px;
+      animation: flash 1s infinite;
+    }
+    @keyframes flash {
+      0%, 100% { background-color: gold; }
+      50% { background-color: orange; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Rock Paper Scissors ✊📄✂️</h1>
+  <div class="choices">
+    <div class="choice-wrapper">
+      <button class="choice" onclick="play('rock')">🪨</button>
+      <div class="choice-text">Rock</div>
+    </div>
+    <div class="choice-wrapper">
+      <button class="choice" onclick="play('paper')">📄</button>
+      <div class="choice-text">Paper</div>
+    </div>
+    <div class="choice-wrapper">
+      <button class="choice" onclick="play('scissors')">✂️</button>
+      <div class="choice-text">Scissors</div>
+    </div>
+  </div>
+  <div class="result" id="result">Make your move!</div>
+  <div class="scoreboard" id="scoreboard">You: 0 | Computer: 0</div>
+  <div class="history">
+    <h3>Game History</h3>
+    <ul id="historyList"></ul>
+  </div>
+  <div id="winnerBanner"></div>
+  <button class="reset-btn" onclick="resetGame()">Reset Game</button>
+
+  <script>
+    let userScore = 0;
+    let compScore = 0;
+    let totalRounds = 0;
+    const maxRounds = 10;
+
+    const resultDisplay = document.getElementById('result');
+    const scoreDisplay = document.getElementById('scoreboard');
+    const historyList = document.getElementById('historyList');
+    const winnerBanner = document.getElementById('winnerBanner');
+
+    function play(userChoice) {
+      if (totalRounds >= maxRounds) return;
+
+      const choices = ['rock', 'paper', 'scissors'];
+      const compChoice = choices[Math.floor(Math.random() * 3)];
+      let result = '';
+
+      if (userChoice === compChoice) {
+        result = `🤝 It's a draw! You both chose ${userChoice}.`;
+      } else if (
+        (userChoice === 'rock' && compChoice === 'scissors') ||
+        (userChoice === 'paper' && compChoice === 'rock') ||
+        (userChoice === 'scissors' && compChoice === 'paper')
+      ) {
+        result = `🎉 You win! ${userChoice} beats ${compChoice}.`;
+        userScore++;
+      } else {
+        result = `💥 You lose! ${compChoice} beats ${userChoice}.`;
+        compScore++;
+      }
+
+      totalRounds++;
+      resultDisplay.textContent = result;
+      scoreDisplay.textContent = `You: ${userScore} | Computer: ${compScore} (Round ${totalRounds}/${maxRounds})`;
+
+      const li = document.createElement('li');
+      li.textContent = result;
+      historyList.prepend(li);
+
+      if (totalRounds === maxRounds) {
+        showMatchWinner();
+      }
+    }
+
+    function showMatchWinner() {
+      if (userScore > compScore) {
+        winnerBanner.innerHTML = "🏆 You are the CHAMPION!";
+      } else if (userScore < compScore) {
+        winnerBanner.innerHTML = "🤖 Computer wins the match!";
+      } else {
+        winnerBanner.innerHTML = "⚖️ It's a draw match!";
+      }
+      winnerBanner.className = 'winner-banner';
+    }
+
+    function resetGame() {
+      userScore = 0;
+      compScore = 0;
+      totalRounds = 0;
+      resultDisplay.textContent = 'Make your move!';
+      scoreDisplay.textContent = `You: 0 | Computer: 0`;
+      historyList.innerHTML = '';
+      winnerBanner.innerHTML = '';
+      winnerBanner.className = '';
+    }
+  </script>
+</body>
+</html>
