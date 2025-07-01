@@ -24,7 +24,7 @@ const timelineData = [
     title: 'MBA in Marketing',
     year: '2022 – 2024',
     subtitle: 'Andhra University, Visakhapatnam',
-    description: 'GPA: Result Pending...',
+    description: '57.8%',
     icon: '/logos/mba.svg',
   },
   {
