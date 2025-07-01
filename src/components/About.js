@@ -79,7 +79,7 @@ export default function About() {
             className="flex flex-wrap justify-center md:justify-start gap-5 pt-6"
           >
             <a
-              href="/resume.pdf"
+              href="/md-tasleem-aarif.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium py-2 px-6 rounded-full hover:scale-105 hover:shadow-lg transition-all duration-300"
