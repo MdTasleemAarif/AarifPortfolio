@@ -73,7 +73,7 @@ export const projects = [
     title: 'Coffe Cafe',
     category: 'WordPress',
     mode: 'development',
-    url: '',
+    url: 'https://dev-coffee-cafe.pantheonsite.io/',
     description: 'Inviting coffee café with warm lighting, cozy seating, and fresh brews.',
   },
   {
