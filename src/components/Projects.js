@@ -10,7 +10,7 @@ import Tilt from 'react-parallax-tilt';
 const devCategories = [
   { label: "HTML", icon: <img src="/logos/html.svg" alt="HTML" className="h-6 w-6 inline-block mr-2" /> },
   { label: "CSS", icon: <img src="/logos/css.svg" alt="CSS" className="h-6 w-6 inline-block mr-2" /> },
-  { label: "JavaScript", icon: <img src="/logos/javaScript.svg" alt="Photoshop" className="h-6 w-6 inline-block mr-2" /> },
+  { label: "JavaScript", icon: <img src="/logos/javascript.svg" alt="Photoshop" className="h-6 w-6 inline-block mr-2" /> },
   { label: "WordPress", icon: <img src="/logos/wordpress.svg" alt="Photoshop" className="h-6 w-6 inline-block mr-2" /> },
   { label: "BootStrap", icon: <img src="/logos/bootstrap.svg" alt="Photoshop" className="h-6 w-6 inline-block mr-2" /> },
   { label: "React.js", icon: <img src="/logos/react.svg" alt="React" className="h-6 w-6 inline-block mr-2" />},
