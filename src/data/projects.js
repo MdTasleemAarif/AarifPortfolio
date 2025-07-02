@@ -14,7 +14,7 @@ export const projects = [
     title: 'BMI Calculator',
     category: 'JavaScript',
     mode: 'development',
-    url: '/BMICalculater.html',
+    url: '/BMIcalculater.html',
     description: 'A BMI calculator that takes height and weight to compute index.',
   },
   {
